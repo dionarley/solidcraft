@@ -22,8 +22,9 @@ The ticket carries a `consent` record listing exactly which boxes were ticked.
 
 ## Network use
 
-SolidCraft talks to the ticket server only when the user sends a report or opens My tickets, or to
-send a report already waiting in the queue. There is no background telemetry.
+SolidCraft talks to the ticket server only when the user sends a report or opens My tickets, to
+send a report already waiting in the queue, or, while signed in, to check the user's own tickets
+at most every 15 minutes (below). There is no telemetry.
 
 - **Sign-in** uses a device code: the first report opens the server's sign-in page in the browser
   and shows the code in the dialog. The token is kept in the system keyring (Windows Credential
@@ -35,6 +36,16 @@ send a report already waiting in the queue. There is no background telemetry.
   `solidcraft_engine::recovery::data_dir`) and is sent when SolidCraft starts or every five
   minutes while it runs, once signed in. The queue holds the report and its files, never the
   token.
+
+## My tickets
+
+Help › My Tickets… lists the user's own tickets with their status and the latest reply, each with
+an Open button for its page on the server. A ticket with something new (a server notice not yet
+read, or a change since the list was last closed) has a dot, and so does the Help menu's item.
+The list is fetched when the window opens or Refresh is pressed. While signed in, SolidCraft also
+checks a minute after it starts and then at most every 15 minutes, for the dot; signed out, it
+never checks. What was last seen (ticket numbers and their change times) is kept in the
+preferences as `tickets_seen`; the token stays in the keyring.
 
 ## The old behaviour
 
